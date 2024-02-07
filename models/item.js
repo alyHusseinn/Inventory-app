@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const itemSchema = Schema({
+const itemSchema = new Schema({
   name: {
     type: String,
   },
@@ -25,4 +25,4 @@ itemSchema.virtual("number_in_stock").get(async function () {
     .countDocuments({ item: this._id, in_stock: true });
 });
 
-module.exports = new mongoose.model("Item", itemSchema);
+module.exports = mongoose.model("Item", itemSchema);

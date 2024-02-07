@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const itemInstanceSchema = Schema({
+const itemInstanceSchema = new Schema({
   item: [{ Type: Schema.Types.ObjectId, ref: "Item", required: true }],
   in_stock: {
     type: Boolean,
@@ -14,6 +14,6 @@ itemInstanceSchema.virtual("url").get(function() {
     return `/catalog/iteminstance/${this._id}`;
 })
 
-module.exports = new mongoose.model("ItemInstance", itemInstanceSchema);
+module.exports = mongoose.model("ItemInstance", itemInstanceSchema);
 
 

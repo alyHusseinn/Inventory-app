@@ -18,4 +18,4 @@ categorySchema.virtual('url').get(function() {
     return `/catalog/category/${this_id}`;
 });
 
-module.exports = new mongoose.model('Item', categorySchema);
+module.exports = mongoose.model('Item', categorySchema);
