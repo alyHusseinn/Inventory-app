@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+    h1=title 
+    p A detailed description about #{genre.name} Genre 
+    if songs.length > 0
+        ul 
+            each song in songs 
+                li 
+                    a(href=song.url) #{song.name}
+    else
+        h2 There's no any Songs added in this Genre yet! 
+
+    p 
+        a(href=genre.url+"/update") Update Genre.
+    p 
+        a(href=genre.url+"/delete") Delete Genre.

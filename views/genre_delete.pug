@@ -1,0 +1,15 @@
+extends layout 
+
+block content 
+
+    h1=title 
+    if songs
+        p You should Delete all these songs First.
+        ul
+        each song in songs 
+            li 
+                a(href=song.url) song.name
+    else
+        p Are you sure you want to delete this Genre?
+        form(method="POST")
+             button.btn-primary.btn(type="submit" ) Delete
