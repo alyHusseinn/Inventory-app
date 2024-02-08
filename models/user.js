@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema();
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   name: {
@@ -10,7 +10,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  shared_songs: [{ type: Schema.Types.ObjectId, ref: "song", required: true }],
+  shared_songs: [{ "type": Schema.Types.ObjectId, "ref": "Genre", required: true }], 
 });
 
 userSchema.virtual("url").get(function () {

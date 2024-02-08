@@ -21,7 +21,35 @@ exports.index = asyncHandler(async (req, res, next) => {
   });
 });
 
-// exports.songs_list = asyncHandler(async(req, res, next) => {
-//     const allSongs = await Song.find({}).sort({name: 1}).populate('Artist Genre').exec();
-//     res.render('songs_list', )
-// })
+
+exports.songs_list = asyncHandler(async(req, res, next) => {
+    res.send("aha neek")
+});
+
+exports.song_details = asyncHandler(async(req, res, next) => {
+    res.send("aha neek");
+});
+
+exports.song_create_get = asyncHandler(async(req, res, next) => {
+    res.send("aha neek");
+});
+
+exports.song_create_post = asyncHandler(async(req, res, next) => {
+    res.send("aha neek");
+})
+
+exports.song_update_get = asyncHandler(async(req, res, next) => {
+    res.send("aha neek");
+});
+
+exports.song_update_post = asyncHandler(async(req, res, next) => {
+    res.send("aha neek");
+});
+
+exports.song_delete_get = asyncHandler(async(req, res, next) => {
+    res.send("aha neek");
+});
+
+exports.song_delete_post = asyncHandler(async(req, res, next) => {
+    res.send("aha neek");
+})

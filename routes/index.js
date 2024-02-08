@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-router.get('/', (res,req) => {
+router.get('/', (req, res, next) => {
     res.redirect('/catalog');
 });
 

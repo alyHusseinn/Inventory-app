@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const artist = new Schema({
+const artistSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -25,7 +25,7 @@ const artist = new Schema({
   },
 });
 
-itemInstanceSchema.virtual("url").get(function () {
+artistSchema.virtual("url").get(function () {
   return `/catalog/artist/${this._id}`;
 });
 

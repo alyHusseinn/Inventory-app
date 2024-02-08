@@ -11,7 +11,7 @@ const genreSchema = new Schema({
   },
 });
 
-categorySchema.virtual("url").get(function () {
+genreSchema.virtual("url").get(function () {
   return `/catalog/genre/${this_id}`;
 });
 
