@@ -21,11 +21,9 @@ router.get('/song/:id/delete', songController.song_delete_get);
 router.post('/song/:id/delete', songController.song_delete_post);
 
 // genre routes
-router.get("/genres", genreController.genres_list);
-router.get('/genre/:id', genreController.genre_details);
 
-router.get('/genre/:id/create', genreController.genre_create_get);
-router.post('/genre/:id/create', genreController.genre_create_post);
+router.get('/genre/create', genreController.genre_create_get);
+router.post('/genre/create', genreController.genre_create_post);
 
 router.get('/genre/:id/update', genreController.genre_update_get);
 router.post('/genre/:id/update', genreController.genre_update_post);
@@ -33,12 +31,15 @@ router.post('/genre/:id/update', genreController.genre_update_post);
 router.get('/genre/:id/delete', genreController.genre_delete_get);
 router.post('/genre/:id/delete', genreController.genre_delete_post);
 
+router.get("/genres", genreController.genres_list);
+router.get('/genre/:id', genreController.genre_details);
+
 // artist routes
 router.get('/artists', artistController.artists_list);
 router.get('/artist/:id', artistController.artist_details);
 
-router.get('/artist/:id/create', artistController.artist_create_get);
-router.post('/artist/:id/create', artistController.artist_create_post);
+router.get('/artist/create', artistController.artist_create_get);
+router.post('/artist/create', artistController.artist_create_post);
 
 router.get('/artist/:id/update', artistController.artist_update_get);
 router.post('/artist/:id/update', artistController.artist_update_post);
@@ -50,8 +51,8 @@ router.post('/artist/:id/delete', artistController.artist_delete_post);
 router.get('/users', userController.users_list);
 router.get('/user/:id', userController.user_details);
 
-router.get('/user/:id/create', userController.user_create_get);
-router.post('/user/:id/create', userController.user_create_post);
+router.get('/user/create', userController.user_create_get);
+router.post('/user/create', userController.user_create_post);
 
 router.get('/user/:id/update', userController.user_update_get);
 router.post('/user/:id/update', userController.user_update_post);
