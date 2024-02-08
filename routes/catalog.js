@@ -1,48 +1,62 @@
 const router = require('express').Router();
-const itemController = require('./controllers/itemController');
-const categoryController = require('./controllers/categoryController');
-const itemInstanceController = require('./controllers/itemInstanceController');
+const songController = require('./controllers/songController');
+const genreController = require('./controllers/genreController');
+const artistController = require('./controllers/artistController');
+const userController = require('./controllers/userController');
 
 // the index page
-router.get('/', itemController.index);
+router.get('/', songController.index);
 
-// item routes
-router.get('/items', itemInstanceController.items_list);
-router.get('/item/:id', itemInstanceController.item_details);
+// song routes
+router.get('/songs', songController.songs_list);
+router.get('/song/:id', songController.song_details);
 
-router.get('/item/:id/create', itemInstanceController.item_create_get);
-router.post('/item/:id/create', itemInstanceController.item_create_post);
+router.get('/song/:id/create', songController.song_create_get);
+router.post('/song/:id/create', songController.song_create_post);
 
-router.get('/item/:id/update', itemInstanceController.item_update_get);
-router.post('/item/:id/update', itemInstanceController.item_update_post);
+router.get('/song/:id/update', songController.song_update_get);
+router.post('/song/:id/update', songController.song_update_post);
 
-router.get('/item/:id/delete', itemInstanceController.item_delete_get);
-router.post('/item/:id/delete', itemInstanceController.item_delete_post);
+router.get('/song/:id/delete', songController.song_delete_get);
+router.post('/song/:id/delete', songController.song_delete_post);
 
-// category routes
-router.get("/categories", categoryController.categories_list);
-router.get('/category/:id', categoryController.category_details);
+// genre routes
+router.get("/genres", genreController.genres_list);
+router.get('/genre/:id', genreController.genre_details);
 
-router.get('/category/:id/create', categoryController.category_create_get);
-router.post('/category/:id/create', categoryController.category_create_post);
+router.get('/genre/:id/create', genreController.genre_create_get);
+router.post('/genre/:id/create', genreController.genre_create_post);
 
-router.get('/category/:id/update', categoryController.category_update_get);
-router.post('/category/:id/update', categoryController.category_update_post);
+router.get('/genre/:id/update', genreController.genre_update_get);
+router.post('/genre/:id/update', genreController.genre_update_post);
 
-router.get('/category/:id/delete', categoryController.category_delete_get);
-router.post('/category/:id/delete', categoryController.cattegory_delete_post);
+router.get('/genre/:id/delete', genreController.genre_delete_get);
+router.post('/genre/:id/delete', genreController.genre_delete_post);
 
-// itemInstance routes
-router.get('/itemInstances', itemInstanceController.itemInstances_list);
-router.get('/itemInstance/:id', itemInstanceController.itemInstance_details);
+// artist routes
+router.get('/artists', artistController.artists_list);
+router.get('/artist/:id', artistController.atist_details);
 
-router.get('/itemInstance/:id/create', itemInstanceController.itemInstance_create_get);
-router.post('/itemInstance/:id/create', itemInstanceController.itemInstance_create_post);
+router.get('/artist/:id/create', artistController.artist_create_get);
+router.post('/artist/:id/create', artistController.artist_create_post);
 
-router.get('/itemInstance/:id/update', itemInstanceController.itemInstance_update_get);
-router.post('/itemInstance/:id/update', itemInstanceController.itemInstance_update_post);
+router.get('/artist/:id/update', artistController.artist_update_get);
+router.post('/artist/:id/update', artistController.artist_update_post);
 
-router.get('/itemInstance/:id/delete', itemInstanceController.itemIncstance_delete_get);
-router.post('/itemInstance/:id/delete', itemInstanceController.itemIncstance_delete_post);
+router.get('/artist/:id/delete', artistController.artist_delete_get);
+router.post('/artist/:id/delete', artistController.artist_delete_post);
+
+// user routes
+router.get('/users', userController.users_list);
+router.get('/user/:id', userController.user_details);
+
+router.get('/user/:id/create', userController.user_create_get);
+router.post('/user/:id/create', userController.user_create_post);
+
+router.get('/user/:id/update', userController.user_update_get);
+router.post('/user/:id/update', userController.user_update_post);
+
+router.get('/user/:id/delete', userController.user_delete_get);
+router.post('/user/:id/delete', userController.user_delete_post);
 
 module.exports = router;
