@@ -1,0 +1,21 @@
+extends layout 
+
+block content 
+    if artist == null
+        h3 This Arist dosn't exist.
+    else 
+        h1=title 
+        a(href=artist.link) #{artist.name}'s Spotify.
+        if songs.length > 0
+            h3 Songs.
+            ul 
+            each song in songs 
+                li 
+                    a(href=song.url) #{song.name}
+        else 
+            h3 This Artist has not any songs Yet!.
+        p 
+            a(href=artist.url+"/delete") Delete.
+        p 
+            a(href=artist.url+"/update") Update.
+    

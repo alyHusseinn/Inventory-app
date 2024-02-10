@@ -1,0 +1,14 @@
+extends layout 
+block content 
+    h1=title 
+    if songs.length > 0
+        h3 You should Delete all of these songs first.
+        ul 
+        each song in songs 
+            li 
+                a(href=song.url) #{song.name}
+    else 
+        p3 Are you sure you want to Delete this Artist!.
+        form(method="POST")
+            .form-group
+                button.btn.btn-primary(type='submit') Delete

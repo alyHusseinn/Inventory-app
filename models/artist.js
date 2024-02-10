@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
@@ -27,6 +28,10 @@ const artistSchema = new Schema({
 
 artistSchema.virtual("url").get(function () {
   return `/catalog/artist/${this._id}`;
+});
+
+artistSchema.virtual("date_of_birth_yyyy_mm_dd").get(function () {
+  return DateTime.fromJSDate(this.date_of_birth).toISODate(); // format 'YYYY-MM-DD'
 });
 
 module.exports = mongoose.model("Artist", artistSchema);
