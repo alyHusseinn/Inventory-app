@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 const songSchema = new Schema({
@@ -22,8 +21,8 @@ const songSchema = new Schema({
   summary: {
     type: String,
   },
-  artist: [{ type: Schema.Types.ObjectId, ref: "artist", required: true }],
-  genre: [{ type: Schema.Types.ObjectId, ref: "genre", required: true }],
+  artist: { type: Schema.Types.ObjectId, ref: "Artist", required: true },
+  genre: { type: Schema.Types.ObjectId, ref: "Genre", required: true },
 });
 
 songSchema.virtual("url").get(function () {

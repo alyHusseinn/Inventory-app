@@ -128,7 +128,7 @@ exports.artist_update_post = [
     //       errors: [{ msg: "This Artist already exist!" }],
     //     });
     //   } else {
-        const updatedArtist = await Artist.findByIdAndUpdate(
+        const updatedArtist = await Artist.findByIdAndUpdate( 
           req.params.id,
           artist,
           {}

@@ -5,6 +5,8 @@ const user = require("../models/user");
 // instead of doing try catch on all functions we can put them in this fucntion
 // asyncHandler -> it wraps the functions with try and catch
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
+const log = require("../utils/logger");
 
 exports.index = asyncHandler(async (req, res, next) => {
   const [numSongs, numArtists, numGenres] = await Promise.all([
@@ -21,40 +23,180 @@ exports.index = asyncHandler(async (req, res, next) => {
   });
 });
 
+exports.songs_list = asyncHandler(async (req, res, next) => {
+  const songs = await Song.find({}).exec();
 
-exports.songs_list = asyncHandler(async(req, res, next) => {
-    const songs = await Song.find({}).populate("artists genre").exec();
-
-    res.render("songs_list", {
-        title: "Songs",
-        songs: songs,
-    })
+  res.render("songs_list", {
+    title: "Songs",
+    songs: songs,
+  });
 });
 
-exports.song_details = asyncHandler(async(req, res, next) => {
-    res.send("aha neek");
+exports.song_details = asyncHandler(async (req, res, next) => {
+  const song = await Song.findById(req.params.id)
+    .populate("artist genre")
+    .exec();
+
+  if (song == null) {
+    const err = new Error("Song not found");
+    err.status = 404;
+    next(err);
+  }
+
+  res.render("song_details", {
+    title: "Song details",
+    song: song,
+  });
 });
 
-exports.song_create_get = asyncHandler(async(req, res, next) => {
-    res.send("aha neek");
+exports.song_create_get = asyncHandler(async (req, res, next) => {
+  const [artists, genres] = await Promise.all([
+    Artist.find().exec(),
+    Genre.find().exec(),
+  ]);
+  res.render("song_form", {
+    title: "Add a new Song",
+    artists: artists,
+    genres: genres,
+  });
 });
 
-exports.song_create_post = asyncHandler(async(req, res, next) => {
-    res.send("aha neek");
-})
+exports.song_create_post = [
+  body("name")
+    .trim()
+    .escape()
+    .isLength({ min: 5 })
+    .withMessage("Please enter a Name size bigger than 5 characters"),
+  body("summary")
+    .trim()
+    .escape()
+    .isLength({ min: 20 })
+    .withMessage("Please enter a Summary size bigger than 20 characters"),
+  body("link")
+    .trim()
+    .custom((v) =>
+      /(https?:\/\/(?:www\.)?)?(open\.spotify|soundcloud)\.com\/.*$/.test(v)
+    )
+    .withMessage("It Should be a Spotify or soundCloud Link!"),
 
-exports.song_update_get = asyncHandler(async(req, res, next) => {
-    res.send("aha neek");
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const [artists, genres] = await Promise.all([
+      Artist.find().exec(),
+      Genre.find().exec(),
+    ]);
+
+    const song = new Song({
+      name: req.body.name,
+      link: req.body.link,
+      summary: req.body.summary,
+      artist: req.body.artist,
+      genre: req.body.genre,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("song_form", {
+        title: "Add a new Song",
+        song: song,
+        artists: artists,
+        genres: genres,
+        errors: errors.array(),
+      });
+    } else {
+      await song.save();
+      res.redirect(song.url);
+    }
+  }),
+];
+
+exports.song_update_get = asyncHandler(async (req, res, next) => {
+  const [artists, genres, song] = await Promise.all([
+    Artist.find().exec(),
+    Genre.find().exec(),
+    Song.findById(req.params.id).populate("artist genre").exec(),
+  ]);
+
+  res.render("song_form", {
+    title: "Update Song",
+    artists: artists,
+    genres: genres,
+    song: song,
+  });
 });
 
-exports.song_update_post = asyncHandler(async(req, res, next) => {
-    res.send("aha neek");
+exports.song_update_post = [
+  body("name")
+    .trim()
+    .escape()
+    .isLength({ min: 5 })
+    .withMessage("Please enter a Name size bigger than 5 characters"),
+  body("summary")
+    .trim()
+    .escape()
+    .isLength({ min: 20 })
+    .withMessage("Please enter a Summary size bigger than 20 characters"),
+  body("link")
+    .trim()
+    .custom((v) =>
+      /(https?:\/\/(?:www\.)?)?(open\.spotify|soundcloud)\.com\/.*$/.test(v)
+    )
+    .withMessage("It Should be a Spotify or soundCloud Link!"),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const [artists, genres] = await Promise.all([
+      Artist.find().exec(),
+      Genre.find().exec(),
+    ]);
+
+    const song = new Song({
+      name: req.body.name,
+      link: req.body.link,
+      summary: req.body.summary,
+      artist: req.body.artist,
+      genre: req.body.genre,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("song_form", {
+        title: "Add a new Song",
+        song: song,
+        artists: artists,
+        genres: genres,
+        errors: errors.array(),
+      });
+    } else {
+      const updatedSong = await Song.findByIdAndUpdate(req.params.id, song, {}).exec();
+      res.redirect(updatedSong.url);
+    }
+  }),
+];
+
+exports.song_delete_get = asyncHandler(async (req, res, next) => {
+  const song = await Song.findById(req.params.id).exec();
+
+  if (!song) {
+    const error = new Error("Song not found");
+    error.status = 404;
+    next(error);
+  } else {
+    res.render("song_delete", {
+      title: `Delete Song: ${song.name}`,
+    });
+  }
 });
 
-exports.song_delete_get = asyncHandler(async(req, res, next) => {
-    res.send("aha neek");
+exports.song_delete_post = asyncHandler(async (req, res, next) => {
+  const song = await Song.findById(req.params.id).exec();
+  if (!song) {
+    const error = new Error("This song not found");
+    error.status = 404;
+    next(error);
+  } else {
+    await Song.findByIdAndDelete(req.params.id).exec();
+    res.redirect("/catalog/songs");
+  }
 });
-
-exports.song_delete_post = asyncHandler(async(req, res, next) => {
-    res.send("aha neek");
-})

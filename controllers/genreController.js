@@ -66,7 +66,7 @@ exports.genre_update_get = asyncHandler(async (req, res, next) => {
 
   if (!genre) {
     const err = new Error("No Genre found");
-    err.status = 404;
+    err.status = 404; 
     next(err);
   } else {
     res.render("genre_form", {
