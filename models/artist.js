@@ -8,6 +8,10 @@ const artistSchema = new Schema({
     type: String,
     required: true,
   },
+  avatar: {
+    type: String,
+    required: true,
+  },
   link: {
     type: String,
     required: true,

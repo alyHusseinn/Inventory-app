@@ -6,6 +6,10 @@ block content
     else 
         h1=title 
         a(href=artist.link) #{artist.name}'s Spotify.
+        hr
+        if artist.avatar 
+            img(src=artist.avatar)
+            hr
         if songs.length > 0
             h3 Songs.
             ul 

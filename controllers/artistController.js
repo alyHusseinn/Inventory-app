@@ -3,6 +3,11 @@ const Artist = require("../models/artist");
 const Song = require("../models/song");
 const { body, validationResult } = require("express-validator");
 
+const multer = require("multer");
+const { storage } = require("../storage/storage");
+
+const upload = multer({ storage: storage });
+
 exports.artists_list = asyncHandler(async (req, res, next) => {
   const artists = await Artist.find({}).exec();
   res.render("artists_list", {
@@ -31,6 +36,7 @@ exports.artist_create_get = (req, res, next) => {
 };
 
 exports.artist_create_post = [
+  upload.single("avatar"),
   body("name")
     .escape()
     .trim()
@@ -44,13 +50,17 @@ exports.artist_create_post = [
     )
     .withMessage("You should Provide Spotify or SoundCloud Link!"),
   body("date_of_birth").isISO8601().toDate(),
+
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+
+    console.log(req.file);
 
     const artist = new Artist({
       name: req.body.name,
       link: req.body.link,
       date_of_birth: req.body.date_of_birth,
+      avatar: req.file.path,
     });
     if (!errors.isEmpty()) {
       res.render("artist_form", {
@@ -59,18 +69,8 @@ exports.artist_create_post = [
         errors: errors.array(),
       });
     } else {
-      // find if that user artist is already exist, render the form again
-      const existedArtist = await Artist.find({ name: req.body.name }).exec();
-      if (existedArtist) {
-        res.render("artist_form", {
-          title: "Add a new artist",
-          artist: artist,
-          errors: [{ msg: "This Artist already exist!" }],
-        });
-      } else {
-        await artist.save();
-        res.redirect(artist.url);
-      }
+      await artist.save();
+      res.redirect(artist.url);
     }
   }),
 ];
@@ -90,6 +90,7 @@ exports.artist_update_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.artist_update_post = [
+  upload.single("avatar"),
   body("name")
     .escape()
     .trim()
@@ -119,21 +120,12 @@ exports.artist_update_post = [
         errors: errors.array(),
       });
     } else {
-      // find if that user artist is already exist, render the form again
-    //   const existedArtist = await Artist.find({ name: req.body.name }).exec();
-    //   if (existedArtist) {
-    //     res.render("artist_form", {
-    //       title: "Update an artist",
-    //       artist: artist,
-    //       errors: [{ msg: "This Artist already exist!" }],
-    //     });
-    //   } else {
-        const updatedArtist = await Artist.findByIdAndUpdate( 
-          req.params.id,
-          artist,
-          {}
-        ).exec();
-        res.redirect(updatedArtist.url);
+      const updatedArtist = await Artist.findByIdAndUpdate(
+        req.params.id,
+        artist,
+        {}
+      ).exec();
+      res.redirect(updatedArtist.url);
     }
   }),
 ];
@@ -144,7 +136,7 @@ exports.artist_delete_get = asyncHandler(async (req, res, next) => {
     Song.find({ artist: req.params.id }).exec(),
   ]);
 
-  if(artist == null){
+  if (artist == null) {
     res.redirect("/catalog/artists");
   }
 
