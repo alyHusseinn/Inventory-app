@@ -49,17 +49,4 @@ router.post('/artist/:id/delete', artistController.artist_delete_post);
 router.get('/artists', artistController.artists_list);
 router.get('/artist/:id', artistController.artist_details);
 
-// user routes
-router.get('/users', userController.users_list);
-router.get('/user/:id', userController.user_details);
-
-router.get('/user/create', userController.user_create_get);
-router.post('/user/create', userController.user_create_post);
-
-router.get('/user/:id/update', userController.user_update_get);
-router.post('/user/:id/update', userController.user_update_post);
-
-router.get('/user/:id/delete', userController.user_delete_get);
-router.post('/user/:id/delete', userController.user_delete_post);
-
 module.exports = router;
