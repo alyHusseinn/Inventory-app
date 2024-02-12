@@ -1,21 +1,30 @@
-# Inverntory App.
+# Music Sharing app
+Built using MVC design pattern. <br>
+It allows the users do CRUD operations like:
+- `GET`: (songs, artists, genres).
+- `POST`: (songs, artists, genres).
+- `PUT`: (songs, artists, genres).
+- `DELETE`: (songs, artists, genres).
+## Database Schema
+![database schema](./docs/DB-Schema.png)
 
-Your Inventory app should have categories and items, so when the user goes to the home-page they can choose a category to view, and then get a list of every item in that category. You should include all of the CRUD methods for both items and categories, so anybody that’s visiting the site can Create, Read, Update or Delete any Item or Category.
+## what I learned
+- Handling uploded files using `multer`.
+- Host Imgaes on `Cloudinary`.
+- From Validation with `express-validator`.
+- Mongoose.
+- pug.js
 
-- Before you begin, take a moment to write down all of the models you’ll need and the fields that should go in them. It might help to grab a pencil and some paper and literally draw a diagram like you saw in the MDN tutorial on databases.
-
-    - tems should at least have: a name, description, category, price, number-in-stock and URL, though you should feel free to add more fields if it seems relevant to the type of business you’ve chosen.
-    - Categories should at least have a name, a description and a URL.
-
-- We’re going to follow the basic path that was demonstrated by the MDN tutorial to set up and flesh out your app, so first choose a templating language and generate the boilerplate skeleton with express-generator.
-
-- Create a new Mongo Collection using the web-interface as demonstrated in the tutorial and then set up your database schemas and models.
-
-- In the Library tutorial you populated your database with some sample data that was provided in a populatedb.js file. Actually understanding how that worked was over your head at the time, but now that you’ve finished that tutorial you’ll be able to understand how it works. Download the file here and edit it, or re-write it using the specifics of your models and then run it to populate your database!
-
-- Set up the routes and controllers you’re going to need.
-- Create all of the ‘READ’ views (i.e. view category, and view item)
-Create all the forms and build out the controllers you need for the rest of the CRUD actions.
-- EXTRA CREDIT: For bonus points, try to figure out how to add and upload images for each item. Use this middleware which was created by the Express team. The documentation in the README there should be enough to get you going.
-- EXTRA CREDIT: We will learn about creating users with secure passwords in a later lesson, but for now we don’t want just anyone to be able to delete and edit items in our inventory! Figure out how to protect destructive actions (like deleting and updating) by making users enter a secret admin password to confirm the action.
-Deploy it and show off what you’ve done!
+## Routes needed for the LocalLibrary
+- catalog/
+    - The home/index page.
+- catalog/`objects`/ 
+    - The list of all songs, artists or genres (e.g. /catalog/songs/, /catalog/genres/, etc.)
+- catalog/`object`/`id` 
+    - The detail page for a specific song, artist or genre with the given _id.
+- catalog/`object`/create 
+    - The form to create a new song, artist or genre (e.g. /catalog/song/create).
+- catalog/`object`/`id`/update 
+    - The form to update a specific song, artist or genre with the given _id.
+- catalog/`object`/`id`/delete 
+    - The form to delete a specific song, artist or genre with the given _id.
