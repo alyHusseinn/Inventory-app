@@ -111,6 +111,7 @@ exports.artist_update_post = [
       name: req.body.name,
       link: req.body.link,
       date_of_birth: req.body.date_of_birth,
+      avatar: req.file.avatar,
       _id: req.params.id,
     });
     if (!errors.isEmpty()) {
