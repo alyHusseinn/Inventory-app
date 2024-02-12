@@ -6,6 +6,10 @@ const songSchema = new Schema({
     type: String,
     required: true,
   },
+  conver: {
+    type: String,
+    required: true,
+  },
   link: {
     type: String,
     validate: {
