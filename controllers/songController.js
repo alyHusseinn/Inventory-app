@@ -8,6 +8,10 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const log = require("../utils/logger");
 
+const multer = require("multer");
+const { storage } = require("../storage/storage");
+const upload = multer({ storage });
+
 exports.index = asyncHandler(async (req, res, next) => {
   const [numSongs, numArtists, numGenres] = await Promise.all([
     Song.countDocuments().exec(),
@@ -62,6 +66,7 @@ exports.song_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.song_create_post = [
+  upload.single("cover"),
   body("name")
     .trim()
     .escape()
@@ -89,13 +94,14 @@ exports.song_create_post = [
 
     const song = new Song({
       name: req.body.name,
+      cover: req.file.path,
       link: req.body.link,
       summary: req.body.summary,
       artist: req.body.artist,
       genre: req.body.genre,
     });
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) {   
       res.render("song_form", {
         title: "Add a new Song",
         song: song,
@@ -126,6 +132,7 @@ exports.song_update_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.song_update_post = [
+  upload.single("cover"),
   body("name")
     .trim()
     .escape()
@@ -153,6 +160,7 @@ exports.song_update_post = [
 
     const song = new Song({
       name: req.body.name,
+      cover: req.file.path,
       link: req.body.link,
       summary: req.body.summary,
       artist: req.body.artist,
@@ -169,7 +177,11 @@ exports.song_update_post = [
         errors: errors.array(),
       });
     } else {
-      const updatedSong = await Song.findByIdAndUpdate(req.params.id, song, {}).exec();
+      const updatedSong = await Song.findByIdAndUpdate(
+        req.params.id,
+        song,
+        {}
+      ).exec();
       res.redirect(updatedSong.url);
     }
   }),

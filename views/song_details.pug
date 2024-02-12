@@ -2,6 +2,8 @@ extends layout
 
 block content
   h1 Title: #{song.name}
+  if song.cover 
+    img(src=song.cover, style="width: 50%")
   p #[strong Spotify/SoundCloud: ] 
     a(href=song.link) #{song.link}
   p #[strong Artist: ]

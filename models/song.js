@@ -6,7 +6,7 @@ const songSchema = new Schema({
     type: String,
     required: true,
   },
-  conver: {
+  cover: {
     type: String,
     required: true,
   },
