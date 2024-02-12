@@ -5,6 +5,18 @@ block content
   p Welcome to #{title}
   h3 Our App contains: 
   ul 
-    li #[strong Songs:] !{songs_count}
-    li #[strong Artists:] !{artists_count}
-    li #[strong Genres:]: !{genres_count}
+    li #[strong Songs:]
+      ul 
+        for song in songs 
+          li 
+            a(href=song.url) #{song.name}
+    li #[strong Artists:]
+      ul 
+        for artist in artists 
+          li 
+            a(href=artist.url) #{artist.name}
+    li #[strong Genres:]
+      ul 
+        for genre in genres 
+          li 
+            a(href=genre.url) #{genre.name}

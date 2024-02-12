@@ -1,7 +1,6 @@
 const Song = require("../models/song");
 const Artist = require("../models/artist");
 const Genre = require("../models/genre");
-const user = require("../models/user");
 // instead of doing try catch on all functions we can put them in this fucntion
 // asyncHandler -> it wraps the functions with try and catch
 const asyncHandler = require("express-async-handler");
@@ -13,17 +12,17 @@ const { storage } = require("../storage/storage");
 const upload = multer({ storage });
 
 exports.index = asyncHandler(async (req, res, next) => {
-  const [numSongs, numArtists, numGenres] = await Promise.all([
-    Song.countDocuments().exec(),
-    Artist.countDocuments().exec(),
-    Genre.countDocuments().exec(),
+  const [songs, artists, genres] = await Promise.all([
+    Song.find().exec(),
+    Artist.find().exec(),
+    Genre.find().exec(),,
   ]);
 
   res.render("index", {
     title: "music sharing app",
-    artists_count: numArtists,
-    genres_count: numGenres,
-    songs_count: numSongs,
+    artists: artists,
+    genres: genres,
+    songs: songs,
   });
 });
 

@@ -23,7 +23,7 @@ exports.artist_details = asyncHandler(async (req, res, next) => {
   ]);
 
   res.render("artist_details", {
-    title: `Artist :${artist.name} details`,
+    title: artist.name,
     artist: artist,
     songs: songs,
   });
@@ -111,7 +111,7 @@ exports.artist_update_post = [
       name: req.body.name,
       link: req.body.link,
       date_of_birth: req.body.date_of_birth,
-      avatar: req.file.avatar,
+      avatar: req.file.path,
       _id: req.params.id,
     });
     if (!errors.isEmpty()) {

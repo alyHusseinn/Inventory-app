@@ -2,8 +2,6 @@ const router = require('express').Router();
 const songController = require('../controllers/songController');
 const genreController = require('../controllers/genreController');
 const artistController = require('../controllers/artistController');
-const userController = require('../controllers/userController');
-
 // the index page
 router.get('/', songController.index);
 

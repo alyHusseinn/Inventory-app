@@ -1,15 +1,14 @@
 extends layout
 
 block content
-  h1 Title: #{song.name}
+  h1 #{song.name}
   if song.cover 
     img(src=song.cover, style="width: 50%")
   p #[strong Spotify/SoundCloud: ] 
-    a(href=song.link) #{song.link}
+    a(href=song.link) #{song.name}
   p #[strong Artist: ]
     a(href=song.artist.url) #{song.artist.name}
-  p #[strong Summary:] 
-    pre #{song.summary}
+  p #[strong Lyrics:] #{song.summary}
   p #[strong Genre: ]
     a(href=song.genre.url) #{song.genre.name}
     hr
