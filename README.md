@@ -1,6 +1,6 @@
 # Music Sharing app
 Built using MVC design pattern. <br>
-It allows the users do CRUD operations like:
+allowing users to do CRUD operations like:
 - `GET`: (songs, artists, genres).
 - `POST`: (songs, artists, genres).
 - `PUT`: (songs, artists, genres).
@@ -15,7 +15,7 @@ It allows the users do CRUD operations like:
 - Mongoose.
 - pug.js
 
-## Routes needed for the LocalLibrary
+## Routes.
 - catalog/
     - The home/index page.
 - catalog/`objects`/ 
