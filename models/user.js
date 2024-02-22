@@ -8,17 +8,15 @@ const userSchema = new Schema({
     required: true,
   },
   password: {
-    type: String,
-    required: true,
-  }, //   hash: {
-  //     type: String,
-  //     required: true,
-  //   },
-  //   salt: {
-  //     type: String,
-  //     required: true,
-  //   },
-  // },
+    hash: {
+      type: String,
+      required: true,
+    },
+    salt: {
+      type: String,
+      required: true,
+    },
+  },
 });
 
 userSchema.virtual("url").get(function () {
