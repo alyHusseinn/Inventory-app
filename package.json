@@ -2,7 +2,7 @@
   "name": "inventtory-site",
   "version": "0.0.0",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=18"
   },
   "private": true,
   "scripts": {
