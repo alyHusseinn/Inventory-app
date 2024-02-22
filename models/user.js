@@ -8,19 +8,21 @@ const userSchema = new Schema({
     required: true,
   },
   password: {
-    hash: {
-      type: String,
-      required: true,
-    },
-    salt: {
-      type: String,
-      required: true,
-    },
-  },
+    type: String,
+    required: true,
+  }, //   hash: {
+  //     type: String,
+  //     required: true,
+  //   },
+  //   salt: {
+  //     type: String,
+  //     required: true,
+  //   },
+  // },
 });
 
-userSchema.virtual("url").get(function(){
-    return `/catalog/user/${this_id}`;
+userSchema.virtual("url").get(function () {
+  return `/catalog/user/${this_id}`;
 });
 
 module.exports = mongoose.model("User", userSchema);

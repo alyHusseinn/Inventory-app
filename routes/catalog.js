@@ -2,6 +2,10 @@ const router = require('express').Router();
 const songController = require('../controllers/songController');
 const genreController = require('../controllers/genreController');
 const artistController = require('../controllers/artistController');
+
+const isAuth = require("../middlewares/isAuthenticated");
+
+router.use(isAuth);
 // the index page
 router.get('/', songController.index);
 

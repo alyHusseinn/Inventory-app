@@ -1,0 +1,17 @@
+extends layout 
+
+block all 
+
+    h1 You Should Log In Frist! 
+        form(method="POST")
+            .form-group 
+                label(for='username') Name: 
+                input#username.form-control(type='text' placeholder='Your Name' name='username' )
+                label(for='password') Password: 
+                input#password.form-control(type='text' placeholder='Password' name='password' )
+            button.btn.btn-primary(type='submit') Submit
+        if errors 
+            ul
+            each err in errors 
+                li=err.msg
+

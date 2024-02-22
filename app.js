@@ -10,12 +10,15 @@ const compression = require("compression");
 
 var indexRouter = require("./routes/index");
 const catalogRouter = require("./routes/catalog");
+const authRouter = require("./routes/auth");
+
+const isAuth = require("./middlewares/isAuthenticated");
 // Set up rate limiter: maximum of twenty requests per minute
-const RateLimit = require("express-rate-limit");
-const limiter = RateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 20,
-});
+// const RateLimit = require("express-rate-limit");
+// const limiter = RateLimit({
+//   windowMs: 1 * 60 * 1000, // 1 minute
+//   max: 20,
+// });
 
 var app = express();
 
@@ -36,10 +39,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(limiter);
+// app.use(limiter);
 
 app.use("/", indexRouter);
 app.use("/catalog", catalogRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
