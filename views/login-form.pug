@@ -10,6 +10,7 @@ block all
                 label(for='password') Password: 
                 input#password.form-control(type='text' placeholder='Password' name='password' )
             button.btn.btn-primary(type='submit') Submit
+        a(href="/auth/signup") sign up here!
         if errors 
             ul
             each err in errors 
