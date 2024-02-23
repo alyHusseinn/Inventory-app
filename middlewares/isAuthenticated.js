@@ -4,7 +4,7 @@ const isAuth = (req, res, next) => {
 
   const isLoggedIn = req.get("Cookie")?.split(";")[1]?.split("=")[1];
   console.log(isLoggedIn);
-  if(!isLoggedIn){
+  if(!req.session.loggedIn){
     res.redirect("/auth/login");
   }else {
     next();

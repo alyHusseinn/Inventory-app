@@ -38,42 +38,54 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = [
-  body("username", "The Name should be minimoum 10 char")
+  body("username", "The Name should be at least 10 characters")
     .trim()
     .isLength({ min: 10 }),
-  body("password", "The Password should be minimoum 10 char")
+  body("password", "The Password should be at least 10 characters")
     .trim()
     .isLength({ min: 10 }),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.render("login-form", { errors: errors.array() });
-    } else {
-      User.findOne({ username: req.body.username }).then((user) => {
-        if (!user) {
-          return res.render("signup-form", {
-            errors: [{ msg: "Invalid username" }],
-          });
-        }
-        bcrypt.compare(
-          req.body.password,
-          user.hashedpassword,
-          (err, result) => {
-            if (result) {
-              // HttpOnly means that the frontend cannot access the cookies using JS, document.cookie
-              res.setHeader(
-                "Set-Cookie",
-                "isLoggedIn=true; path=/; Expires=Wed, 21 Oct 2025 07:28:00 GMT; HttpOnly"
-              );
-              return res.redirect("/");
-            }
-            res.render("login-form", {
-              errors: [{ msg: "Invalid Password!" }],
-            });
-          }
-        );
-      });
+      return res.render("login-form", { errors: errors.array() });
+    }
+
+    try {
+      const user = await User.findOne({ username: req.body.username });
+
+      if (!user) {
+        return res.render("signup-form", {
+          errors: [{ msg: "Invalid username" }],
+        });
+      }
+
+      const passwordMatch = await bcrypt.compare(
+        req.body.password,
+        user.hashedpassword
+      );
+
+      if (passwordMatch) {
+        req.session.loggedIn = true;
+        return res.redirect("/");
+      } else {
+        return res.render("login-form", {
+          errors: [{ msg: "Invalid Password!" }],
+        });
+      }
+    } catch (error) {
+      // Handle any errors that might occur during database query or bcrypt comparison
+      console.error("Error:", error);
+      return res.status(500).send("Internal Server Error");
     }
   }),
 ];
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error:", err);
+    }
+  });
+  res.redirect("/");
+};

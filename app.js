@@ -11,6 +11,7 @@ const compression = require("compression");
 var indexRouter = require("./routes/index");
 const catalogRouter = require("./routes/catalog");
 const authRouter = require("./routes/auth");
+const session = require("express-session");
 
 const isAuth = require("./middlewares/isAuthenticated");
 // Set up rate limiter: maximum of twenty requests per minute
@@ -23,11 +24,14 @@ const limiter = RateLimit({
 var app = express();
 
 mongoose.set("strictQuery", false);
-mongoose.connect(MONGODB_URL).then(() => {
-  log.info("Connection to MongoDB is established Successfully!")
-}).catch(err => {
-  log.error(err);  
-})
+mongoose
+  .connect(MONGODB_URL)
+  .then(() => {
+    log.info("Connection to MongoDB is established Successfully!");
+  })
+  .catch((err) => {
+    log.error(err);
+  });
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -41,6 +45,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(limiter);
 
+app.use(
+  session({
+    name: "sid",
+    resave: false,
+    saveUninitialized: false,
+    secret: 'a7a',
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      sameSite: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    },
+  })
+);
 app.use("/", indexRouter);
 app.use("/catalog", catalogRouter);
 app.use("/auth", authRouter);
@@ -54,7 +71,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {}; 
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
   res.status(err.status || 500);
