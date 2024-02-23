@@ -12,6 +12,7 @@ var indexRouter = require("./routes/index");
 const catalogRouter = require("./routes/catalog");
 const authRouter = require("./routes/auth");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongo");
 
 const isAuth = require("./middlewares/isAuthenticated");
 // Set up rate limiter: maximum of twenty requests per minute
@@ -45,12 +46,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(limiter);
 
+// const store = MongoDBStore({
+//   url: MONGODB_URL,
+//   collection: 'sessions',
+// })
 app.use(
   session({
     name: "sid",
     resave: false,
     saveUninitialized: false,
     secret: 'a7a',
+    store: MongoDBStore.create({
+      mongoUrl: MONGODB_URL,
+      collectionName: 'sessions',
+    }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
       sameSite: true,
