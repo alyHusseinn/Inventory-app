@@ -2,6 +2,7 @@ const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 exports.getSignup = (req, res, next) => {
   res.render("signup-form");
@@ -37,55 +38,22 @@ exports.getLogin = (req, res, next) => {
   res.render("login-form");
 };
 
-exports.postLogin = [
-  body("username", "The Name should be at least 10 characters")
-    .trim()
-    .isLength({ min: 10 }),
-  body("password", "The Password should be at least 10 characters")
-    .trim()
-    .isLength({ min: 10 }),
-  asyncHandler(async (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.render("login-form", { errors: errors.array() });
-    }
-
-    try {
-      const user = await User.findOne({ username: req.body.username });
-
-      if (!user) {
-        return res.render("signup-form", {
-          errors: [{ msg: "Invalid username" }],
-        });
-      }
-
-      const passwordMatch = await bcrypt.compare(
-        req.body.password,
-        user.hashedpassword
-      );
-
-      if (passwordMatch) {
-        req.session.loggedIn = true;
-        return res.redirect("/");
-      } else {
-        return res.render("login-form", {
-          errors: [{ msg: "Invalid Password!" }],
-        });
-      }
-    } catch (error) {
-      // Handle any errors that might occur during database query or bcrypt comparison
-      console.error("Error:", error);
-      return res.status(500).send("Internal Server Error");
-    }
-  }),
-];
+exports.postLogin = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/auth/login",
+});
 
 exports.postLogout = (req, res, next) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error:", err);
+  // req.session.destroy((err) => {
+  //   if (err) {
+  //     console.error("Error:", err);
+  //   }
+  // });
+  req.logout((err, info) => {
+    if(err){
+      next(err);
+    }else {
+      res.redirect("/auth/login");
     }
-  });
-  res.redirect("/");
+  })
 };

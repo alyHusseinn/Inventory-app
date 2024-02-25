@@ -4,17 +4,17 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
-const { MONGODB_URL, PORT } = require("./utils/config");
+const { MONGODB_URL, PORT } = require("./config/config");
 const log = require("./utils/logger");
 const compression = require("compression");
 
 var indexRouter = require("./routes/index");
 const catalogRouter = require("./routes/catalog");
 const authRouter = require("./routes/auth");
+
 const session = require("express-session");
 const MongoDBStore = require("connect-mongo");
 
-const isAuth = require("./middlewares/isAuthenticated");
 // Set up rate limiter: maximum of twenty requests per minute
 const RateLimit = require("express-rate-limit");
 const limiter = RateLimit({
@@ -46,19 +46,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(limiter);
 
-// const store = MongoDBStore({
-//   url: MONGODB_URL,
-//   collection: 'sessions',
-// })
 app.use(
   session({
     name: "sid",
     resave: false,
     saveUninitialized: false,
-    secret: 'a7a',
+    secret: "a7a",
     store: MongoDBStore.create({
       mongoUrl: MONGODB_URL,
-      collectionName: 'sessions',
+      collectionName: "sessions",
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
@@ -67,6 +63,12 @@ app.use(
     },
   })
 );
+
+const passport = require("passport");
+require("./config/passportAuth");
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/", indexRouter);
 app.use("/catalog", catalogRouter);
 app.use("/auth", authRouter);

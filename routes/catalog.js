@@ -3,10 +3,11 @@ const songController = require('../controllers/songController');
 const genreController = require('../controllers/genreController');
 const artistController = require('../controllers/artistController');
 
-const isAuth = require("../middlewares/isAuthenticated");
+const isAuth = require('../middlewares/isAuthenticated');
 
-router.use(isAuth);
+// router.use(isAuth);
 // the index page
+router.use(isAuth);
 router.get('/', songController.index);
 
 // song routes

@@ -4,7 +4,7 @@ const {
   CLOUD_NAME,
   CLOUDINARY_KEY,
   CLOUDINARY_SECRET,
-} = require("../utils/config");
+} = require("../config/config");
 
 cloudinary.config({
   cloud_name: CLOUD_NAME,
