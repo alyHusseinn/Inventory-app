@@ -2,6 +2,7 @@ const router = require('express').Router();
 const songController = require('../controllers/songController');
 const genreController = require('../controllers/genreController');
 const artistController = require('../controllers/artistController');
+const userController = require('../controllers/userController');
 
 const isAuth = require('../middlewares/isAuthenticated');
 
@@ -51,5 +52,8 @@ router.post('/artist/:id/delete', artistController.artist_delete_post);
 
 router.get('/artists', artistController.artists_list);
 router.get('/artist/:id', artistController.artist_details);
+
+// user routes
+router.get('/user/:id', userController.user_details);
 
 module.exports = router;

@@ -12,9 +12,10 @@ block content
   p #[strong Genre: ]
     a(href=song.genre.url) #{song.genre.name}
     hr
-    p created by:
-      a(href=song.created_by.url) #{song.created_by.username}
-    p
-      a(href=song.url+'/delete') Delete Song
-    p
-      a(href=song.url+'/update') Update Song
+    if song.created_by
+      p created by:
+        a(href=song.created_by.url) #{song.created_by.username}
+      p
+        a(href=song.url+'/delete') Delete Song
+      p
+        a(href=song.url+'/update') Update Song
