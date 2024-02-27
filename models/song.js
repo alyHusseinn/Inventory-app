@@ -27,6 +27,7 @@ const songSchema = new Schema({
   },
   artist: { type: Schema.Types.ObjectId, ref: "Artist", required: true },
   genre: { type: Schema.Types.ObjectId, ref: "Genre", required: true },
+  created_by: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 songSchema.virtual("url").get(function () {

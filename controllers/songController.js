@@ -1,6 +1,7 @@
 const Song = require("../models/song");
 const Artist = require("../models/artist");
 const Genre = require("../models/genre");
+const User = require("../models/user");
 // instead of doing try catch on all functions we can put them in this fucntion
 // asyncHandler -> it wraps the functions with try and catch
 const asyncHandler = require("express-async-handler");
@@ -37,7 +38,7 @@ exports.songs_list = asyncHandler(async (req, res, next) => {
 
 exports.song_details = asyncHandler(async (req, res, next) => {
   const song = await Song.findById(req.params.id)
-    .populate("artist genre")
+    .populate("artist genre created_by")
     .exec();
 
   if (song == null) {
@@ -98,6 +99,7 @@ exports.song_create_post = [
       summary: req.body.summary,
       artist: req.body.artist,
       genre: req.body.genre,
+      created_by: req.user._id,
     });
 
     if (!errors.isEmpty()) {   
@@ -164,6 +166,7 @@ exports.song_update_post = [
       summary: req.body.summary,
       artist: req.body.artist,
       genre: req.body.genre,
+      created_by: req.user._id,
       _id: req.params.id,
     });
 

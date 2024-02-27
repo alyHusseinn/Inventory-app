@@ -11,8 +11,11 @@ html(lang='en')
   body
     block all
       div(class='container-fluid')
+        if currentUser 
+          h1 wellcome #{currentUser.username}
         div(class='row')
           div(class='col-sm-2')
+            
             block sidebar
               ul(class='sidebar-nav')
                 li
