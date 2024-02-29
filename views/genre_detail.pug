@@ -3,6 +3,7 @@ extends layout
 block content 
     h1=title 
     p A detailed description about #{genre.name} Genre 
+    h2 ## Songs:
     if songs.length > 0
         ul 
             each song in songs 
@@ -11,7 +12,12 @@ block content
     else
         h2 There's no any Songs added in this Genre yet! 
 
-    p 
-        a(href=genre.url+"/update") Update Genre.
-    p 
-        a(href=genre.url+"/delete") Delete Genre.
+    hr
+    p created by:
+    a(href=genre.created_by.url) #{genre.created_by.username}
+    hr
+    if genre.created_by.username==currentUser.username
+      p
+        a(href=genre.url+'/delete') Delete Genre
+      p
+        a(href=genre.url+'/update') Update Gnere

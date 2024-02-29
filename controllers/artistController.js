@@ -5,6 +5,8 @@ const { body, validationResult } = require("express-validator");
 
 const multer = require("multer");
 const { storage } = require("../storage/storage");
+const isAuthorized =
+  require("../middlewares/isAuthorized").isAuthorized_to_update_artist;
 
 const upload = multer({ storage: storage });
 
@@ -18,7 +20,7 @@ exports.artists_list = asyncHandler(async (req, res, next) => {
 
 exports.artist_details = asyncHandler(async (req, res, next) => {
   const [artist, songs] = await Promise.all([
-    Artist.findById(req.params.id).exec(),
+    Artist.findById(req.params.id).populate("created_by").exec(),
     Song.find({ artist: req.params.id }).exec(),
   ]);
 
@@ -75,21 +77,25 @@ exports.artist_create_post = [
   }),
 ];
 
-exports.artist_update_get = asyncHandler(async (req, res, next) => {
-  const artist = await Artist.findById(req.params.id).exec();
-  if (!artist) {
-    const err = new Error("Artist not found");
-    err.status = 404;
-    next(err);
-  } else {
-    res.render("artist_form", {
-      title: "Update Artist",
-      artist: artist,
-    });
-  }
-});
+exports.artist_update_get = [
+  isAuthorized,
+  asyncHandler(async (req, res, next) => {
+    const artist = await Artist.findById(req.params.id).exec();
+    if (!artist) {
+      const err = new Error("Artist not found");
+      err.status = 404;
+      next(err);
+    } else {
+      res.render("artist_form", {
+        title: "Update Artist",
+        artist: artist,
+      });
+    }
+  }),
+];
 
 exports.artist_update_post = [
+  isAuthorized,
   upload.single("avatar"),
   body("name")
     .escape()
@@ -131,37 +137,43 @@ exports.artist_update_post = [
   }),
 ];
 
-exports.artist_delete_get = asyncHandler(async (req, res, next) => {
-  const [artist, songs] = await Promise.all([
-    Artist.findById(req.params.id).exec(),
-    Song.find({ artist: req.params.id }).exec(),
-  ]);
+exports.artist_delete_get = [
+  isAuthorized,
+  asyncHandler(async (req, res, next) => {
+    const [artist, songs] = await Promise.all([
+      Artist.findById(req.params.id).exec(),
+      Song.find({ artist: req.params.id }).exec(),
+    ]);
 
-  if (artist == null) {
-    res.redirect("/catalog/artists");
-  }
+    if (artist == null) {
+      res.redirect("/catalog/artists");
+    }
 
-  res.render("artist_delete", {
-    title: "Delete An Artist",
-    artist: artist,
-    songs: songs,
-  });
-});
-
-exports.artist_delete_post = asyncHandler(async (req, res, next) => {
-  const [artist, songs] = await Promise.all([
-    Artist.findById(req.params.id).exec(),
-    Song.find({ artist: req.params.id }).exec(),
-  ]);
-
-  if (songs.length > 0) {
     res.render("artist_delete", {
       title: "Delete An Artist",
       artist: artist,
       songs: songs,
     });
-  } else {
-    await Artist.findByIdAndDelete(req.params.id).exec();
-    res.redirect("/catalog/artists");
-  }
-});
+  }),
+];
+
+exports.artist_delete_post = [
+  isAuthorized,
+  asyncHandler(async (req, res, next) => {
+    const [artist, songs] = await Promise.all([
+      Artist.findById(req.params.id).exec(),
+      Song.find({ artist: req.params.id }).exec(),
+    ]);
+
+    if (songs.length > 0) {
+      res.render("artist_delete", {
+        title: "Delete An Artist",
+        artist: artist,
+        songs: songs,
+      });
+    } else {
+      await Artist.findByIdAndDelete(req.params.id).exec();
+      res.redirect("/catalog/artists");
+    }
+  }),
+];

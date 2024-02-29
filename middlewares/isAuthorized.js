@@ -9,7 +9,7 @@ exports.isAuthorized_to_update_song = async (req, res, next) => {
     if(song.created_by.username == req.user.username){
         next();
     }else {
-        res.status(401).send("unAuthorized");
+        res.status(401).send("unAuthorized").end();
     }
 }
 

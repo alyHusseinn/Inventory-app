@@ -18,8 +18,13 @@ block content
                     a(href=song.url) #{song.name}
         else 
             h3(style="background-color: red; color: white") #{artist.name} has not any songs Yet!.
-        p 
-            a(href=artist.url+"/delete", style="font-size: 20px; font-weight: 1000") Delete.
-        p 
-            a(href=artist.url+"/update", style="font-size: 20px; font-weight: 1000") Update.
+        hr
+        p created by:
+        a(href=artist.created_by.url) #{artist.created_by.username}
+        hr
+        if artist.created_by.username==currentUser.username
+            p
+                a(href=artist.url+'/delete') Delete Artist
+            p
+                a(href=artist.url+'/update') Update Artist
     

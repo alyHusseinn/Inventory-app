@@ -6,7 +6,8 @@ const User = require("../models/user");
 // asyncHandler -> it wraps the functions with try and catch
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-const log = require("../utils/logger");
+const isAuthorized =
+  require("../middlewares/isAuthorized").isAuthorized_to_update_song;
 
 const multer = require("multer");
 const { storage } = require("../storage/storage");
@@ -16,7 +17,8 @@ exports.index = asyncHandler(async (req, res, next) => {
   const [songs, artists, genres] = await Promise.all([
     Song.find().exec(),
     Artist.find().exec(),
-    Genre.find().exec(),,
+    Genre.find().exec(),
+    ,
   ]);
 
   res.render("index", {
@@ -102,7 +104,7 @@ exports.song_create_post = [
       created_by: req.user._id,
     });
 
-    if (!errors.isEmpty()) {   
+    if (!errors.isEmpty()) {
       res.render("song_form", {
         title: "Add a new Song",
         song: song,
@@ -117,22 +119,26 @@ exports.song_create_post = [
   }),
 ];
 
-exports.song_update_get = asyncHandler(async (req, res, next) => {
-  const [artists, genres, song] = await Promise.all([
-    Artist.find().exec(),
-    Genre.find().exec(), 
-    Song.findById(req.params.id).populate("artist genre").exec(),
-  ]);
+exports.song_update_get = [
+  isAuthorized,
+  asyncHandler(async (req, res, next) => {
+    const [artists, genres, song] = await Promise.all([
+      Artist.find().exec(),
+      Genre.find().exec(),
+      Song.findById(req.params.id).populate("artist genre").exec(),
+    ]);
 
-  res.render("song_form", {
-    title: "Update Song",
-    artists: artists,
-    genres: genres,
-    song: song,
-  });
-});
+    res.render("song_form", {
+      title: "Update Song",
+      artists: artists,
+      genres: genres,
+      song: song,
+    });
+  }),
+];
 
 exports.song_update_post = [
+  isAuthorized,
   upload.single("cover"),
   body("name")
     .trim()
@@ -189,28 +195,34 @@ exports.song_update_post = [
   }),
 ];
 
-exports.song_delete_get = asyncHandler(async (req, res, next) => {
-  const song = await Song.findById(req.params.id).exec();
+exports.song_delete_get = [
+  isAuthorized,
+  asyncHandler(async (req, res, next) => {
+    const song = await Song.findById(req.params.id).exec();
 
-  if (!song) {
-    const error = new Error("Song not found");
-    error.status = 404;
-    next(error);
-  } else {
-    res.render("song_delete", {
-      title: `Delete Song: ${song.name}`,
-    });
-  }
-});
+    if (!song) {
+      const error = new Error("Song not found");
+      error.status = 404;
+      next(error);
+    } else {
+      res.render("song_delete", {
+        title: `Delete Song: ${song.name}`,
+      });
+    }
+  }),
+];
 
-exports.song_delete_post = asyncHandler(async (req, res, next) => {
-  const song = await Song.findById(req.params.id).exec();
-  if (!song) {
-    const error = new Error("This song not found");
-    error.status = 404;
-    next(error);
-  } else {
-    await Song.findByIdAndDelete(req.params.id).exec();
-    res.redirect("/catalog/songs");
-  }
-});
+exports.song_delete_post = [
+  isAuthorized,
+  asyncHandler(async (req, res, next) => {
+    const song = await Song.findById(req.params.id).exec();
+    if (!song) {
+      const error = new Error("This song not found");
+      error.status = 404;
+      next(error);
+    } else {
+      await Song.findByIdAndDelete(req.params.id).exec();
+      res.redirect("/catalog/songs");
+    }
+  }),
+];
