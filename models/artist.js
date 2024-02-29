@@ -28,6 +28,7 @@ const artistSchema = new Schema({
   date_of_birth: {
     type: Date,
   },
+  created_by: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 artistSchema.virtual("url").get(function () {

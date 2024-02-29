@@ -9,6 +9,7 @@ const genreSchema = new Schema({
     unique: true,
     min: 5,
   },
+  created_by: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 genreSchema.virtual("url").get(function () {
