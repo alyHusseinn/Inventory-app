@@ -4,7 +4,21 @@ block content
     h1=user.username
     if user.picture 
         img(src=user.picture, style="width: 300px; height: 300px; border-radius: 50%")
+    hr
+    h5 ## Created Songs:
     ul
     for song in songs 
         li 
             a(href=song.url) #{song.name}
+    hr
+    h5 ## Created Artists:
+    ul
+    for artist in artists 
+        li 
+            a(href=artist.url) #{artist.name}
+    hr
+    h5 ## Created Genres:
+    ul
+    for genre in genres 
+        li 
+            a(href=genre.url) #{genre.name}
