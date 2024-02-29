@@ -120,7 +120,7 @@ exports.song_create_post = [
 exports.song_update_get = asyncHandler(async (req, res, next) => {
   const [artists, genres, song] = await Promise.all([
     Artist.find().exec(),
-    Genre.find().exec(),
+    Genre.find().exec(), 
     Song.findById(req.params.id).populate("artist genre").exec(),
   ]);
 
